@@ -25,6 +25,31 @@ document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new 
 
 const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
+  // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
+  const styles = {
+    'bamboo-charcoal': ['Bamboo Charcoal Pads', 'Reusable Menstrual Pads'],
+    'organic-cotton': ['Organic Cotton Pads', 'Reusable Menstrual Pads'],
+    'heavy-flow': ['Heavy Flow / Overnight', 'Reusable Menstrual Pads'],
+    'panty-liners': ['Reusable Panty Liners', 'Reusable Menstrual Pads'],
+    'pocket': ['Pocket Cloth Diapers', 'Cloth Diapers'],
+    'aio': ['All-in-One Diapers', 'Cloth Diapers'],
+    'covers': ['Diaper Covers', 'Cloth Diapers'],
+    'inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
+    'wet-bags': ['Wet Bags', 'Wet Bags / Accessories']
+  };
+  const styleKey = new URLSearchParams(location.search).get('style');
+  const selection = Object.hasOwn(styles, styleKey) ? styles[styleKey] : null;
+  if (selection) {
+    const productField = quoteForm.querySelector('[name="product"]');
+    const messageField = quoteForm.querySelector('[name="message"]');
+    if (productField && !productField.value) productField.value = selection[1];
+    if (messageField && !messageField.value) messageField.value = 'Product: ' + selection[0] + '\nQuantity: \nMaterial preference: \nPrinting / packaging: \nStock availability or custom order: ';
+    const context = document.querySelector('#selected-product-context');
+    if (context) {
+      context.textContent = 'Your selected product: ' + selection[0] + '. You can adjust the details below.';
+      context.hidden = false;
+    }
+  }
   quoteForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const button = quoteForm.querySelector('button[type="submit"]');
@@ -52,6 +77,8 @@ if (quoteForm) {
       const result = await response.json();
       if (!result.ok) throw new Error('Unconfirmed delivery');
       quoteForm.reset();
+      const context = document.querySelector('#selected-product-context');
+      if (context) context.hidden = true;
       status.dataset.state = 'success';
       status.textContent = 'Thank you. Your inquiry was sent successfully.';
     } catch (error) {
