@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return res.status(400).json({ error: 'Invalid inquiry' });
   }
-  const limits = { name: 150, email: 254, product: 150, company: 200, country: 100, quantity: 100, whatsapp: 100, customization: 1000, message: 5000 };
+  const limits = { name: 150, email: 254, product: 150, company: 200, country: 100, quantity: 100, quantity_unit: 50, fabric_use: 200, fabric_print: 200, whatsapp: 100, customization: 1000, message: 5000 };
   const data = {};
   for (const [key, limit] of Object.entries(limits)) {
     if (body[key] != null && (typeof body[key] !== 'string' || body[key].length > limit)) {

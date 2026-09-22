@@ -22,14 +22,14 @@ if (menuBtn && navLinks) {
   });
 }
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
+document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname === location.pathname) link.setAttribute('aria-current','page'); });
 
 // Keep a direct contact option within reach across the site.
 if (document.querySelector('main') && !document.querySelector('.contact-dock')) {
   const path = location.pathname;
   let quoteHref = path === '/' ? '#quote' : path === '/request-a-quote/' ? '#details' : '/request-a-quote/';
-  if (/^\/(?:cloth-diapers|reusable-menstrual-pads|accessories)\/[^/]+\/$/.test(path)) {
-    quoteHref = document.querySelector('a[href^="/request-a-quote/?style="]')?.getAttribute('href') || quoteHref;
-  }
+  quoteHref = document.querySelector('main a[href^="/request-a-quote/?style="]')?.getAttribute('href') || quoteHref;
+  if (path === '/' || path === '/products/') quoteHref = path === '/' ? '#quote' : '/request-a-quote/';
 
   const dock = document.createElement('div');
   dock.className = 'contact-dock';
@@ -54,6 +54,10 @@ const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
   // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
   const styles = {
+    'pul-fabric': ['PUL Fabric — 150 cm, 120 g/m², MOQ 5 metres', 'PUL Fabric'],
+    'reusable-nursing-pads': ['Reusable Nursing Pads — PUL, one size', 'Reusable Nursing Pads'],
+    'reusable-swim-diapers': ['Reusable Swim Diapers — PUL, one size', 'Reusable Swim Diapers'],
+    'baby-bibs': ['Baby Bibs — PUL or cotton, one size', 'Baby Bibs'],
     'reusable-hygiene-product-collection': ['Reusable Hygiene Product Collection', 'Reusable Menstrual Pads'],
     'cloth-diaper-inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
     'reusable-menstrual-pads': ['Reusable Menstrual Pads', 'Reusable Menstrual Pads'],
@@ -69,19 +73,49 @@ if (quoteForm) {
     'inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
     'wet-bags': ['Wet Bags', 'Wet Bags / Accessories']
   };
+  const makeProductBrief = (name) => 'Product: ' + name + '\nQuantity: \nMaterial preference: \nPrinting / packaging: \nStock availability or custom order: ';
+  let generatedBrief = '';
   const styleKey = new URLSearchParams(location.search).get('style');
   const selection = Object.hasOwn(styles, styleKey) ? styles[styleKey] : null;
   if (selection) {
     const productField = quoteForm.querySelector('[name="product"]');
     const messageField = quoteForm.querySelector('[name="message"]');
     if (productField && !productField.value) productField.value = selection[1];
-    if (messageField && !messageField.value) messageField.value = 'Product: ' + selection[0] + '\nQuantity: \nMaterial preference: \nPrinting / packaging: \nStock availability or custom order: ';
+    if (messageField && !messageField.value) { generatedBrief = makeProductBrief(selection[0]); messageField.value = generatedBrief; }
     const context = document.querySelector('#selected-product-context');
     if (context) {
       context.textContent = 'Your selected product: ' + selection[0] + '. You can adjust the details below.';
       context.hidden = false;
     }
   }
+  const productSelect = quoteForm.querySelector('[name="product"]');
+  const quantityInput = quoteForm.querySelector('[name="quantity"]');
+  const quantityUnit = quoteForm.querySelector('[name="quantity_unit"]');
+  const fabricFields = quoteForm.querySelector('#fabric-fields');
+  const quantityHelp = quoteForm.querySelector('#quantity-help');
+  const updateQuantityFields = (event) => {
+    const fabric = productSelect?.value === 'PUL Fabric';
+    const nursing = productSelect?.value === 'Reusable Nursing Pads';
+    if (fabricFields) { fabricFields.hidden = !fabric; fabricFields.disabled = !fabric; }
+    if (quantityUnit) {
+      const previous = quantityUnit.value;
+      const units = fabric ? [['metres','Metres']] : nursing ? [['pieces','Pieces'],['pairs','Pairs'],['sets','Sets']] : [['pieces','Pieces'],['sets','Sets']];
+      if (productSelect?.value === 'Multiple Categories') units.push(['mixed','Mixed units — specify in details']);
+      quantityUnit.replaceChildren(...units.map(([value,label]) => new Option(label,value)));
+      if (units.some(([value]) => value === previous)) quantityUnit.value = previous;
+    }
+    if (quantityInput) quantityInput.placeholder = fabric ? 'e.g. 5 or 50 metres' : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
+    if (quantityHelp) quantityHelp.textContent = fabric ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
+    if (event?.type === 'change') {
+      const context = document.querySelector('#selected-product-context');
+      if (context) { context.hidden = !productSelect.value; context.textContent = productSelect.value ? 'Your selected product: ' + productSelect.value + '. You can adjust the details below.' : ''; }
+      const messageField = quoteForm.querySelector('[name="message"]');
+      if (generatedBrief && messageField?.value === generatedBrief) { generatedBrief = productSelect.value ? makeProductBrief(productSelect.value) : ''; messageField.value = generatedBrief; }
+    }
+  };
+  productSelect?.addEventListener('change', updateQuantityFields);
+  quoteForm.addEventListener('reset', () => setTimeout(updateQuantityFields, 0));
+  updateQuantityFields();
   quoteForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const button = quoteForm.querySelector('button[type="submit"]');
