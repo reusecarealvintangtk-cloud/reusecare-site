@@ -24,8 +24,9 @@ body{background:var(--cream);font-family:system-ui,-apple-system,'Segoe UI',sans
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 
 /* Persistent contact actions, shared by all marketing and product pages. */
-body.has-contact-dock{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
-.contact-dock{position:fixed;inset:auto 0 0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:84px;padding:12px max(24px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));background:#fff;border-top:1px solid #dfe6df;box-shadow:0 -8px 25px rgba(23,58,51,.08)}
+body.has-contact-dock .footer{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+.contact-dock{position:fixed;inset:auto 0 calc(18px + env(safe-area-inset-bottom,0px)) 0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:52px;padding:0 max(24px,env(safe-area-inset-right,0px)) 0 max(24px,env(safe-area-inset-left,0px));background:transparent;border:0;box-shadow:none;pointer-events:none}
+.contact-dock a{pointer-events:auto}
 .contact-dock-whatsapp{display:grid;place-items:center;flex:none;width:52px;height:52px;border-radius:50%;background:#19bb66;color:#fff;box-shadow:0 6px 15px rgba(12,116,60,.18);transition:background .2s,transform .2s}
 .contact-dock-whatsapp svg{width:29px;height:29px}
 .contact-dock-whatsapp:hover{background:#0e9952;transform:translateY(-2px)}
@@ -34,5 +35,5 @@ body.has-contact-dock{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px)
 .contact-dock-quote span:last-child{font-size:24px;line-height:1}
 .contact-dock-quote:hover{background:#0e5140;transform:translateY(-2px)}
 .contact-dock a:focus-visible{outline:3px solid #b5663f;outline-offset:4px}
-@media(max-width:640px){body.has-contact-dock{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}.contact-dock{min-height:76px;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}.contact-dock-whatsapp{width:48px;height:48px}.contact-dock-quote{min-height:48px;padding:0 17px;gap:8px;font-size:12px}}
+@media(max-width:640px){.contact-dock{inset-block-end:calc(12px + env(safe-area-inset-bottom,0px));min-height:48px;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}.contact-dock-whatsapp{width:48px;height:48px}.contact-dock-quote{min-height:48px;padding:0 17px;gap:8px;font-size:12px}}
 @media(max-width:350px){.contact-dock-quote svg{display:none}.contact-dock-quote{padding:0 13px}}
