@@ -23,6 +23,33 @@ if (menuBtn && navLinks) {
 }
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 
+// Keep a direct contact option within reach across the site.
+if (document.querySelector('main') && !document.querySelector('.contact-dock')) {
+  const path = location.pathname;
+  let quoteHref = path === '/' ? '#quote' : path === '/request-a-quote/' ? '#details' : '/request-a-quote/';
+  if (/^\/(?:cloth-diapers|reusable-menstrual-pads|accessories)\/[^/]+\/$/.test(path)) {
+    quoteHref = document.querySelector('a[href^="/request-a-quote/?style="]')?.getAttribute('href') || quoteHref;
+  }
+
+  const dock = document.createElement('div');
+  dock.className = 'contact-dock';
+  dock.setAttribute('aria-label', 'Contact ReuseCare');
+  const whatsapp = document.createElement('a');
+  whatsapp.className = 'contact-dock-whatsapp';
+  whatsapp.href = 'https://wa.me/8619905899661';
+  whatsapp.target = '_blank';
+  whatsapp.rel = 'noopener noreferrer';
+  whatsapp.setAttribute('aria-label', 'Chat with Niki on WhatsApp');
+  whatsapp.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M7.5 25.2 4 28l1.2-6A12.6 12.6 0 1 1 16 28a12.5 12.5 0 0 1-8.5-2.8Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M11.6 10.5c-.6.4-1.3 1.5-1.3 2.5 0 2.7 4.8 7.9 8.2 8.3 1 .1 2.2-.7 2.7-1.5l-2.8-1.5-1.2 1.2c-1.5-.7-2.8-2-3.6-3.4l1-1.3-1.7-2.8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  const quote = document.createElement('a');
+  quote.className = 'contact-dock-quote';
+  quote.href = quoteHref;
+  quote.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h9l3 3v15H6zM15 3v4h3M9 11h6M9 15h6M9 19h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Get a Free Quote</span><span aria-hidden="true">›</span>';
+  dock.append(whatsapp, quote);
+  document.body.append(dock);
+  document.body.classList.add('has-contact-dock');
+}
+
 const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
   // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
