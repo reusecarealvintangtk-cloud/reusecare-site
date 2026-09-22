@@ -27,6 +27,9 @@ const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
   // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
   const styles = {
+    'reusable-menstrual-pads': ['Reusable Menstrual Pads', 'Reusable Menstrual Pads'],
+    'reusable-cloth-diapers': ['Reusable Cloth Diapers', 'Cloth Diapers'],
+    'reusable-care-accessories': ['Reusable Care Accessories', 'Wet Bags / Accessories'],
     'bamboo-charcoal': ['Bamboo Charcoal Pads', 'Reusable Menstrual Pads'],
     'organic-cotton': ['Organic Cotton Pads', 'Reusable Menstrual Pads'],
     'heavy-flow': ['Heavy Flow / Overnight', 'Reusable Menstrual Pads'],
