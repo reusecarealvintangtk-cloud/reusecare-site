@@ -27,6 +27,8 @@ const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
   // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
   const styles = {
+    'reusable-hygiene-product-collection': ['Reusable Hygiene Product Collection', 'Reusable Menstrual Pads'],
+    'cloth-diaper-inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
     'reusable-menstrual-pads': ['Reusable Menstrual Pads', 'Reusable Menstrual Pads'],
     'reusable-cloth-diapers': ['Reusable Cloth Diapers', 'Cloth Diapers'],
     'reusable-care-accessories': ['Reusable Care Accessories', 'Wet Bags / Accessories'],

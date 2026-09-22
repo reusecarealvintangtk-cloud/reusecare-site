@@ -19,7 +19,7 @@
       if (show) visible++;
     });
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === selected)));
-    count.textContent = visible + (visible === 1 ? ' product option' : ' product options');
+    count.textContent = visible + (visible === 1 ? ' product line' : ' product lines');
     empty.hidden = visible !== 0;
   };
   buttons.forEach(button => button.addEventListener('click', () => {
