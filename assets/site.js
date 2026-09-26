@@ -54,12 +54,22 @@ const quoteForm = document.querySelector('#quote-form');
 if (quoteForm) {
   // Only known catalog identifiers can prefill an inquiry; never render raw URL text.
   const styles = {
+    "inner-fabric": ["Inner Fabrics","Inner Fabrics"],
+    "diaper-inserts": ["Diaper Inserts","Diaper Inserts"],
+    "inner-fabric-blue": ["Blue Polar Fleece Inner Fabric","Inner Fabrics"],
+    "inner-fabric-pink": ["Pink Polar Fleece Inner Fabric","Inner Fabrics"],
+    "inner-fabric-red": ["Red Polar Fleece Inner Fabric","Inner Fabrics"],
+    "inserts-bamboo-charcoal": ["Bamboo Charcoal Diaper Inserts — 8 Pack","Diaper Inserts"],
+    "inserts-bamboo": ["Bamboo Diaper Inserts — 8 Pack","Diaper Inserts"],
+    "inserts-white": ["White Cloth Diaper Inserts","Diaper Inserts"],
+    "inserts-gusseted": ["Gusseted Charcoal Diaper Inserts","Diaper Inserts"],
+    "inserts-hemp-cotton": ["Hemp & Cotton Diaper Inserts","Diaper Inserts"],
     'pul-fabric': ['PUL Fabric — 150 cm, 120 g/m², MOQ 5 metres', 'PUL Fabric'],
     'reusable-nursing-pads': ['Reusable Nursing Pads — PUL, one size', 'Reusable Nursing Pads'],
     'reusable-swim-diapers': ['Reusable Swim Diapers — PUL, one size', 'Reusable Swim Diapers'],
     'baby-bibs': ['Baby Bibs — PUL or cotton, one size', 'Baby Bibs'],
     'reusable-hygiene-product-collection': ['Reusable Hygiene Product Collection', 'Reusable Menstrual Pads'],
-    'cloth-diaper-inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
+    'cloth-diaper-inserts': ['Diaper Inserts', 'Diaper Inserts'],
     'reusable-menstrual-pads': ['Reusable Menstrual Pads', 'Reusable Menstrual Pads'],
     'reusable-cloth-diapers': ['Reusable Cloth Diapers', 'Cloth Diapers'],
     'reusable-care-accessories': ['Reusable Care Accessories', 'Wet Bags / Accessories'],
@@ -70,7 +80,7 @@ if (quoteForm) {
     'pocket': ['Pocket Cloth Diapers', 'Cloth Diapers'],
     'aio': ['All-in-One Diapers', 'Cloth Diapers'],
     'covers': ['Diaper Covers', 'Cloth Diapers'],
-    'inserts': ['Cloth Diaper Inserts', 'Cloth Diapers'],
+    'inserts': ['Diaper Inserts', 'Diaper Inserts'],
     'wet-bags': ['Wet Bags', 'Wet Bags / Accessories']
   };
   const makeProductBrief = (name) => 'Product: ' + name + '\nQuantity: \nMaterial preference: \nPrinting / packaging: \nStock availability or custom order: ';
@@ -94,9 +104,11 @@ if (quoteForm) {
   const fabricFields = quoteForm.querySelector('#fabric-fields');
   const quantityHelp = quoteForm.querySelector('#quantity-help');
   const updateQuantityFields = (event) => {
-    const fabric = productSelect?.value === 'PUL Fabric';
+    const pul = productSelect?.value === 'PUL Fabric';
+    const inner = productSelect?.value === 'Inner Fabrics';
+    const fabric = pul || inner;
     const nursing = productSelect?.value === 'Reusable Nursing Pads';
-    if (fabricFields) { fabricFields.hidden = !fabric; fabricFields.disabled = !fabric; }
+    if (fabricFields) { fabricFields.hidden = !pul; fabricFields.disabled = !pul; }
     if (quantityUnit) {
       const previous = quantityUnit.value;
       const units = fabric ? [['metres','Metres']] : nursing ? [['pieces','Pieces'],['pairs','Pairs'],['sets','Sets']] : [['pieces','Pieces'],['sets','Sets']];
@@ -104,8 +116,8 @@ if (quoteForm) {
       quantityUnit.replaceChildren(...units.map(([value,label]) => new Option(label,value)));
       if (units.some(([value]) => value === previous)) quantityUnit.value = previous;
     }
-    if (quantityInput) quantityInput.placeholder = fabric ? 'e.g. 5 or 50 metres' : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
-    if (quantityHelp) quantityHelp.textContent = fabric ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
+    if (quantityInput) quantityInput.placeholder = fabric ? (inner ? 'e.g. 50 metres' : 'e.g. 5 or 50 metres') : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
+    if (quantityHelp) quantityHelp.textContent = inner ? 'Inner-fabric width, weight and minimum order are confirmed with your quote. Specify metres.' : pul ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
     if (event?.type === 'change') {
       const context = document.querySelector('#selected-product-context');
       if (context) { context.hidden = !productSelect.value; context.textContent = productSelect.value ? 'Your selected product: ' + productSelect.value + '. You can adjust the details below.' : ''; }
