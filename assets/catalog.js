@@ -21,7 +21,7 @@
       if (show) visible++;
     });
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === selected)));
-    count.textContent = visible + (visible === 1 ? ' product' : ' products');
+    count.textContent = visible + (visible === 1 ? ' style / material reference' : ' style / material references');
     empty.hidden = visible !== 0;
   };
   buttons.forEach(button => button.addEventListener('click', () => {

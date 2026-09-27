@@ -24,6 +24,37 @@ if (menuBtn && navLinks) {
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname === location.pathname) link.setAttribute('aria-current','page'); });
 
+// Carry the exact catalogue reference into the RFQ instead of losing it at category level.
+const quoteUnitByStyle = {
+  'pul-fabric': 'metres', 'inner-fabric': 'metres',
+  'reusable-nursing-pads': 'pairs',
+  'reusable-swim-diapers': 'pieces', 'baby-bibs': 'pieces',
+  'reusable-menstrual-pads': 'pieces', 'reusable-hygiene-product-collection': 'sets',
+  'reusable-cloth-diapers': 'pieces', 'cloth-diaper-inserts': 'pieces',
+  'diaper-inserts': 'pieces', 'reusable-care-accessories': 'pieces',
+  'bamboo-charcoal': 'pieces', 'organic-cotton': 'pieces', 'heavy-flow': 'pieces',
+  'panty-liners': 'pieces', 'pocket': 'pieces', 'aio': 'pieces', 'covers': 'pieces',
+  'inserts': 'pieces', 'wet-bags': 'pieces'
+};
+const unitByCategory = { fabrics: 'metres', 'inner-fabric': 'metres', nursing: 'pairs' };
+document.querySelectorAll('a[href^="/request-a-quote/?style="]').forEach((link) => {
+  const url = new URL(link.getAttribute('href'), location.origin);
+  const style = url.searchParams.get('style');
+  const card = link.closest('.catalog-card');
+  const model = (card?.querySelector('h3') || document.querySelector('main h1'))?.textContent.trim();
+  let image = card?.querySelector('img')?.getAttribute('src') || '';
+  if (!image) {
+    const socialImage = document.querySelector('meta[property="og:image"]')?.content || '';
+    try { image = socialImage ? new URL(socialImage, location.origin).pathname : ''; } catch { image = ''; }
+  }
+  const unit = unitByCategory[card?.dataset.category] || quoteUnitByStyle[style] || 'pieces';
+  if (model) url.searchParams.set('model', model.slice(0, 180));
+  if (/^\/assets\/products\/[a-z0-9][a-z0-9-]*\.(?:webp|png|jpe?g)$/i.test(image)) url.searchParams.set('image', image);
+  url.searchParams.set('unit', unit);
+  url.searchParams.set('source', location.pathname);
+  link.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+});
+
 // Keep a direct contact option within reach across the site.
 if (document.querySelector('main') && !document.querySelector('.contact-dock')) {
   const path = location.pathname;
@@ -83,20 +114,53 @@ if (quoteForm) {
     'inserts': ['Diaper Inserts', 'Diaper Inserts'],
     'wet-bags': ['Wet Bags', 'Wet Bags / Accessories']
   };
-  const makeProductBrief = (name) => 'Product: ' + name + '\nQuantity: \nMaterial preference: \nPrinting / packaging: \nStock availability or custom order: ';
+  const makeProductBrief = (name) => 'Selected style / model: ' + name + '\nQuantity: \nDimensions or fit requirements: \nLayer / material preference: \nPrinting / packaging: \nDestination country and shipping needs: \nStock availability or custom order: ';
   let generatedBrief = '';
-  const styleKey = new URLSearchParams(location.search).get('style');
+  const quoteParams = new URLSearchParams(location.search);
+  const styleKey = quoteParams.get('style');
   const selection = Object.hasOwn(styles, styleKey) ? styles[styleKey] : null;
+  const modelParam = quoteParams.get('model') || '';
+  const imageParam = quoteParams.get('image') || '';
+  const unitParam = quoteParams.get('unit') || '';
+  const sourceParam = quoteParams.get('source') || '';
+  const safeModel = modelParam.length <= 180 && !/[<>\r\n]/.test(modelParam) ? modelParam.trim() : '';
+  const safeImage = /^\/assets\/products\/[a-z0-9][a-z0-9-]*\.(?:webp|png|jpe?g)$/i.test(imageParam) ? imageParam : '';
+  const safeUnit = ['pieces','pairs','sets','metres'].includes(unitParam) ? unitParam : '';
+  const safeSource = /^\/[a-z0-9/_-]*\/?$/i.test(sourceParam) ? sourceParam : '';
+  const modelField = quoteForm.querySelector('[name="product_model"]');
+  const imageField = quoteForm.querySelector('[name="product_image"]');
+  const sourceField = quoteForm.querySelector('[name="source_url"]');
+  const renderSelectedReference = (name, image, source) => {
+    const context = document.querySelector('#selected-product-context');
+    if (!context || !name) return;
+    const copy = document.createElement('div');
+    const label = document.createElement('span');
+    const title = document.createElement('strong');
+    const note = document.createElement('span');
+    label.textContent = 'Selected style / model';
+    title.textContent = name;
+    note.textContent = source ? 'Carried from ' + source : 'You can adjust the product line and quantity below.';
+    copy.append(label, title, note);
+    if (image) {
+      const preview = document.createElement('img');
+      preview.src = image;
+      preview.alt = '';
+      preview.width = 96;
+      preview.height = 96;
+      context.replaceChildren(preview, copy);
+    } else context.replaceChildren(copy);
+    context.hidden = false;
+  };
   if (selection) {
     const productField = quoteForm.querySelector('[name="product"]');
     const messageField = quoteForm.querySelector('[name="message"]');
     if (productField && !productField.value) productField.value = selection[1];
-    if (messageField && !messageField.value) { generatedBrief = makeProductBrief(selection[0]); messageField.value = generatedBrief; }
-    const context = document.querySelector('#selected-product-context');
-    if (context) {
-      context.textContent = 'Your selected product: ' + selection[0] + '. You can adjust the details below.';
-      context.hidden = false;
-    }
+    const selectedName = safeModel || selection[0];
+    if (messageField && !messageField.value) { generatedBrief = makeProductBrief(selectedName); messageField.value = generatedBrief; }
+    if (modelField) { modelField.defaultValue = selectedName; modelField.value = selectedName; }
+    if (imageField) { imageField.defaultValue = safeImage; imageField.value = safeImage; }
+    if (sourceField) { sourceField.defaultValue = safeSource; sourceField.value = safeSource; }
+    renderSelectedReference(selectedName, safeImage, safeSource);
   }
   const productSelect = quoteForm.querySelector('[name="product"]');
   const quantityInput = quoteForm.querySelector('[name="quantity"]');
@@ -120,7 +184,15 @@ if (quoteForm) {
     if (quantityHelp) quantityHelp.textContent = inner ? 'Inner-fabric width, weight and minimum order are confirmed with your quote. Specify metres.' : pul ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
     if (event?.type === 'change') {
       const context = document.querySelector('#selected-product-context');
-      if (context) { context.hidden = !productSelect.value; context.textContent = productSelect.value ? 'Your selected product: ' + productSelect.value + '. You can adjust the details below.' : ''; }
+      if (selection && productSelect.value !== selection[1]) {
+        if (modelField) { modelField.defaultValue = ''; modelField.value = ''; }
+        if (imageField) { imageField.defaultValue = ''; imageField.value = ''; }
+        if (sourceField) { sourceField.defaultValue = ''; sourceField.value = ''; }
+      }
+      if (context && (!selection || productSelect.value !== selection[1])) {
+        context.hidden = !productSelect.value;
+        context.textContent = productSelect.value ? 'Selected product line: ' + productSelect.value + '. Add a style name or reference link below.' : '';
+      }
       const messageField = quoteForm.querySelector('[name="message"]');
       if (generatedBrief && messageField?.value === generatedBrief) { generatedBrief = productSelect.value ? makeProductBrief(productSelect.value) : ''; messageField.value = generatedBrief; }
     }
@@ -128,12 +200,19 @@ if (quoteForm) {
   productSelect?.addEventListener('change', updateQuantityFields);
   quoteForm.addEventListener('reset', () => setTimeout(updateQuantityFields, 0));
   updateQuantityFields();
+  if (safeUnit && [...quantityUnit.options].some(option => option.value === safeUnit)) quantityUnit.value = safeUnit;
   quoteForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const button = quoteForm.querySelector('button[type="submit"]');
     if (button.disabled) return;
     const status = document.querySelector('#form-status');
     const data = Object.fromEntries(new FormData(quoteForm).entries());
+    const referenceStillSelected = selection && productSelect?.value === selection[1];
+    if (referenceStillSelected) {
+      data.product_model = modelField?.value || safeModel || selection[0];
+      data.product_image = imageField?.value || safeImage;
+      data.source_url = sourceField?.value || safeSource;
+    }
     const label = button.textContent;
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 22000);
@@ -155,6 +234,7 @@ if (quoteForm) {
       const result = await response.json();
       if (!result.ok) throw new Error('Unconfirmed delivery');
       quoteForm.reset();
+      [modelField, imageField, sourceField].forEach((field) => { if (field) { field.defaultValue = ''; field.value = ''; } });
       const context = document.querySelector('#selected-product-context');
       if (context) context.hidden = true;
       status.dataset.state = 'success';
