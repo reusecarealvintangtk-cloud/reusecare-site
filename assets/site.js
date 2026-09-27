@@ -24,17 +24,6 @@ if (menuBtn && navLinks) {
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname === location.pathname) link.setAttribute('aria-current','page'); });
 
-// Keep the homepage PUL fabric feature aligned with the current in-stock print reference.
-const homeFabricImage = document.querySelector('.home-page .range-feature figure img[src="/assets/products/pul-fabric.webp"]');
-if (homeFabricImage) {
-  homeFabricImage.src = '/assets/products/pul-fabric-in-stock-prints-warehouse.webp';
-  homeFabricImage.width = 800;
-  homeFabricImage.height = 800;
-  homeFabricImage.alt = 'Warehouse rolls and in-stock PUL fabric print selection';
-  const caption = homeFabricImage.closest('figure')?.querySelector('figcaption');
-  if (caption) caption.textContent = 'In-stock fabric rolls & print selection';
-}
-
 // Carry the exact catalogue reference into the RFQ instead of losing it at category level.
 const quoteUnitByStyle = {
   'pul-fabric': 'metres', 'inner-fabric': 'metres',
