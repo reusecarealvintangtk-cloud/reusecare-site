@@ -1,6 +1,23 @@
 {
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/resources/start-reusable-menstrual-pad-brand.html",
+      "destination": "/resources/start-reusable-menstrual-pad-brand/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/choose-cloth-diaper-manufacturer.html",
+      "destination": "/resources/choose-cloth-diaper-manufacturer/",
+      "permanent": true
+    },
+    {
+      "source": "/resources/pul-vs-tpu.html",
+      "destination": "/resources/pul-vs-tpu/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
