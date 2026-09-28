@@ -1,0 +1,9 @@
+.nursing-styles{scroll-margin-top:110px}
+.nursing-styles .range-section-heading{align-items:start}
+.nursing-styles .range-section-heading>div{max-width:38rem}
+.nursing-styles .eyebrow{margin:0 0 12px}
+.nursing-styles-note{max-width:75ch;margin:0 0 32px;color:var(--muted);font-size:14px;line-height:1.75}
+.nursing-styles .catalog-card{scroll-margin-top:110px}
+.nursing-styles .catalog-card-actions a{font-size:14px}
+.nursing-styles .catalog-visual:focus-visible,.nursing-styles .catalog-card-actions a:focus-visible{outline:3px solid var(--green);outline-offset:4px}
+@media(max-width:600px){.nursing-styles,.nursing-styles .catalog-card{scroll-margin-top:85px}.nursing-styles .catalog-card h3{font-size:25px}}
