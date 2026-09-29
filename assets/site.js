@@ -1,3 +1,20 @@
+// GA4 measurement and business events. No form PII is sent to Analytics.
+const GA_MEASUREMENT_ID = 'G-VRXISG4W22';
+const GA_ID_PATTERN = /^G-[A-Z0-9]+$/i;
+const trackEvent = (name, params = {}) => {
+  if (typeof window.gtag === 'function') window.gtag('event', name, params);
+};
+if (GA_ID_PATTERN.test(GA_MEASUREMENT_ID)) {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  const googleTag = document.createElement('script');
+  googleTag.async = true;
+  googleTag.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`;
+  document.head.appendChild(googleTag);
+  window.gtag('js', new Date());
+  window.gtag('config', GA_MEASUREMENT_ID, { send_page_view: true });
+}
+
 const menuBtn = document.querySelector('.menu-btn');
 const navLinks = document.querySelector('.nav-links');
 if (menuBtn && navLinks) {
@@ -23,6 +40,34 @@ if (menuBtn && navLinks) {
 }
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname === location.pathname) link.setAttribute('aria-current','page'); });
+
+// Measure high-intent navigation without sending email addresses or phone numbers.
+document.addEventListener('click', (event) => {
+  const link = event.target.closest?.('a');
+  if (!link) return;
+  const href = link.getAttribute('href') || '';
+  let destination;
+  try { destination = new URL(href, location.href); } catch { return; }
+  const host = destination.hostname.toLowerCase();
+  const pagePath = location.pathname;
+  const linkText = link.textContent.trim().slice(0, 80);
+  if (destination.protocol === 'mailto:') {
+    trackEvent('email_click', { page_path: pagePath, link_text: linkText });
+  } else if (host === 'wa.me' || host === 'api.whatsapp.com' || host.endsWith('.whatsapp.com')) {
+    trackEvent('whatsapp_click', { page_path: pagePath, link_text: linkText });
+  } else if (destination.pathname === '/request-a-quote/' || href === '#quote' || destination.hash === '#quote') {
+    trackEvent('request_quote_click', { page_path: pagePath, destination_path: destination.pathname });
+  }
+});
+
+const productPagePattern = /^\/(?:products|pul-fabric|reusable-menstrual-pads|reusable-nursing-pads|reusable-swim-diapers|cloth-diapers|baby-bibs|accessories\/wet-bags|inner-fabric)(?:\/|$)/i;
+if (productPagePattern.test(location.pathname)) {
+  const productName = document.querySelector('main h1')?.textContent.trim().slice(0, 160) || location.pathname;
+  trackEvent('view_item', {
+    item_list_name: 'ReuseCare product pages',
+    items: [{ item_id: location.pathname, item_name: productName }]
+  });
+}
 
 // Carry the exact catalogue reference into the RFQ instead of losing it at category level.
 const quoteUnitByStyle = {
@@ -233,6 +278,11 @@ if (quoteForm) {
       }
       const result = await response.json();
       if (!result.ok) throw new Error('Unconfirmed delivery');
+      trackEvent('generate_lead', {
+        form_name: 'request_a_quote',
+        product: data.product,
+        product_model: data.product_model || undefined
+      });
       quoteForm.reset();
       [modelField, imageField, sourceField].forEach((field) => { if (field) { field.defaultValue = ''; field.value = ''; } });
       const context = document.querySelector('#selected-product-context');
