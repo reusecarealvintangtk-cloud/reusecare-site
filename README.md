@@ -17,10 +17,10 @@ Set these Vercel environment variables:
 - `QUOTE_TO_EMAIL` = the mailbox that should receive website inquiries
 - `QUOTE_FROM_EMAIL` = optional verified sender, e.g. `ReuseCare Website <website@reusecare.com>`
 
-Until configured, the form falls back to `sales@reusecare.com` via the visitor's email application.
+Until configured, the form falls back to `niki@reusecare.com` via the visitor's email application.
 
 ## Important placeholders to replace before launch
-- `sales@reusecare.com` if this mailbox is not active
+- `niki@reusecare.com` if this mailbox is not active
 - Legal company name
 - Factory address
 - WhatsApp number

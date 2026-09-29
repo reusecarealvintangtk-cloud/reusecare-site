@@ -22,7 +22,7 @@ Confirmed in-stock styles can dispatch within two days. Existing basic finished-
 ReuseCare name, existing forest green visual identity, English B2B copy, prior approved homepage grouping and independent product pages. Floating contact buttons have transparent surroundings.
 
 ## Evidence on Hand
-User-provided Alibaba product references for PUL, nursing pads, and swim diapers, plus uploaded fox-print bandana bib photograph. Existing product images in assets/products. Niki: +8619905899661; sales@reusecare.com.
+User-provided Alibaba product references for PUL, nursing pads, and swim diapers, plus uploaded fox-print bandana bib photograph. Existing product images in assets/products. Niki: +8619905899661; niki@reusecare.com.
 
 ## Product Principles
 Make fabric and finished-product quantities unambiguous. Show product-specific information before inquiry. Keep category links accessible without JavaScript. Preserve supplied product truth.

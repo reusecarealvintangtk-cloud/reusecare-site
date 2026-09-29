@@ -249,7 +249,7 @@ if (quoteForm) {
       const emailLink = document.createElement('a');
       emailLink.textContent = 'Email these details →';
       const body = Object.entries(data).map(([key, value]) => `${key}: ${value}`).join('\n');
-      emailLink.href = `mailto:sales@reusecare.com?subject=${encodeURIComponent('ReuseCare RFQ — ' + (data.product || 'Website inquiry'))}&body=${encodeURIComponent(body)}`;
+      emailLink.href = `mailto:niki@reusecare.com?subject=${encodeURIComponent('ReuseCare RFQ — ' + (data.product || 'Website inquiry'))}&body=${encodeURIComponent(body)}`;
       status.append(emailLink);
     } finally {
       clearTimeout(timeout);
