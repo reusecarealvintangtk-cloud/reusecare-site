@@ -1,5 +1,5 @@
 // GA4 measurement and business events. No form PII is sent to Analytics.
-const GA_MEASUREMENT_ID = 'G-VRXISG4W22';
+const GA_MEASUREMENT_ID = 'G-VRX1SG4W22';
 const GA_ID_PATTERN = /^G-[A-Z0-9]+$/i;
 const trackEvent = (name, params = {}) => {
   if (typeof window.gtag === 'function') window.gtag('event', name, params);
