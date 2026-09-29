@@ -41,6 +41,28 @@ if (menuBtn && navLinks) {
 document.querySelectorAll('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname === location.pathname) link.setAttribute('aria-current','page'); });
 
+// Connect homepage product families to their matching visual references.
+if (location.pathname === '/') {
+  const catalogCategoryByPath = {
+    '/reusable-menstrual-pads/': 'pads',
+    '/reusable-nursing-pads/': 'nursing',
+    '/cloth-diapers/': 'diapers',
+    '/reusable-swim-diapers/': 'swim',
+    '/baby-bibs/': 'bibs'
+  };
+  document.querySelectorAll('.range-family-card').forEach((card) => {
+    const detailLink = card.querySelector(':scope > a.range-text-link');
+    if (!detailLink) return;
+    const category = catalogCategoryByPath[new URL(detailLink.href, location.href).pathname];
+    if (!category || card.querySelector('.range-text-link-catalog')) return;
+    const catalogLink = document.createElement('a');
+    catalogLink.className = 'range-text-link range-text-link-catalog';
+    catalogLink.href = `/products/?category=${category}#catalog`;
+    catalogLink.textContent = 'Browse product references ↗';
+    detailLink.insertAdjacentElement('afterend', catalogLink);
+  });
+}
+
 // Measure high-intent navigation without sending email addresses or phone numbers.
 document.addEventListener('click', (event) => {
   const link = event.target.closest?.('a');

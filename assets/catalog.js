@@ -7,7 +7,16 @@
   const count = document.querySelector('#catalog-count');
   const empty = document.querySelector('#catalog-empty');
   const categories = new Set(buttons.map(button => button.dataset.filter));
-  const aliases = { 'pul-fabric': 'fabrics', 'inner-fabrics': 'inner-fabric', 'cloth-diapers': 'diapers', 'inserts': 'diaper-inserts' };
+  const aliases = {
+    'pul-fabric': 'fabrics',
+    'inner-fabrics': 'inner-fabric',
+    'nursing-pads': 'nursing',
+    'swim-diapers': 'swim',
+    'baby-bibs': 'bibs',
+    'menstrual-pads': 'pads',
+    'cloth-diapers': 'diapers',
+    'inserts': 'diaper-inserts'
+  };
   const requested = new URLSearchParams(location.search).get('category');
   const initial = aliases[requested] || requested;
   let selected = categories.has(initial) ? initial : 'all';
@@ -26,12 +35,19 @@
   };
   buttons.forEach(button => button.addEventListener('click', () => {
     selected = button.dataset.filter;
+    const url = new URL(location.href);
+    if (selected === 'all') url.searchParams.delete('category');
+    else url.searchParams.set('category', selected);
+    history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
     render();
   }));
   search.addEventListener('input', render);
   document.querySelector('#catalog-reset').addEventListener('click', () => {
     selected = 'all';
     search.value = '';
+    const url = new URL(location.href);
+    url.searchParams.delete('category');
+    history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
     render();
     search.focus();
   });
