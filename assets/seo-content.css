@@ -15,6 +15,7 @@
 .resource-directory{display:grid;grid-template-columns:1.12fr .88fr;gap:28px}
 .resource-entry{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}
 .resource-entry:first-child{grid-column:1/-1;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);padding-top:0}
+.resource-entry picture{display:block;min-width:0}
 .resource-entry img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;background:#e8efe5}
 .resource-entry:first-child img{aspect-ratio:16/9}
 .resource-entry h2,.resource-entry h3{font:500 27px/1.2 Georgia,serif;margin:8px 0 10px;color:var(--ink)}
