@@ -18,6 +18,12 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/media/:path*",
+      "destination": "/api/media?path=:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
