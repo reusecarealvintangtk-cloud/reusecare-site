@@ -24,3 +24,42 @@
 @media(max-width:1100px){.range-hero-grid{gap:36px}.range-detail-grid{gap:42px}.range-facts dd{font-size:18px}.range-end>.container{align-items:flex-start;flex-direction:column}.range-feature{gap:28px;padding:28px}.core-product-directory a{grid-template-columns:90px 1fr auto}.core-product-directory a:nth-child(odd){margin-right:18px}.core-product-directory a:nth-child(even){margin-left:18px}.procurement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:740px){.range-hero-grid,.range-detail-grid,.range-feature{grid-template-columns:1fr;gap:28px}.range-hero-copy{grid-row:1}.range-hero h1{font-size:40px}.range-hero{padding-bottom:36px}.range-product-image{max-width:480px;justify-self:center}.range-section-heading{display:block}.range-section-heading h2{margin-bottom:18px}.range-steps{grid-template-columns:1fr;gap:24px}.range-related-links{grid-template-columns:1fr}.range-family-heading{display:block}.range-family-heading p{margin-top:10px}.range-family-grid,.range-family-grid.two{grid-template-columns:1fr 1fr;gap:24px 18px}.range-family-card img{height:210px}.range-family-card h4{font-size:23px}.range-feature{padding:24px;margin-bottom:32px}.range-feature img{max-height:330px}.range-feature p,.range-lead{font-size:16px}.range-end h2{font-size:30px}.range-nav{gap:4px 18px;font-size:12px}.range-nav a{padding:9px 0}.range-facts{gap:12px}.range-spec-table{font-size:14px}.core-product-directory{grid-template-columns:1fr}.core-product-directory a:nth-child(n){margin:0}.reference-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.procurement-note{grid-template-columns:1fr;gap:6px}}
 @media(max-width:430px){.range-family-grid,.range-family-grid.two{grid-template-columns:1fr}.range-family-card img{height:260px}.range-inquiry-grid{grid-template-columns:1fr}.range-hero h1{font-size:36px}.range-facts dd{font-size:17px}.range-spec-table th{width:35%}.range-feature .range-facts dd{font-size:16px}.range-feature{padding:22px}.range-family{margin-top:34px}.core-product-directory a{grid-template-columns:1fr auto;grid-template-rows:auto auto auto;padding:20px 0}.core-product-directory span{grid-row:auto;grid-column:1}.core-product-directory strong{grid-column:1;font-size:22px}.core-product-directory small{grid-column:1}.core-product-directory b{grid-column:2;grid-row:1 / span 3}.reference-gallery,.procurement-grid{grid-template-columns:1fr}.selected-product-context{grid-template-columns:72px 1fr}.selected-product-context img{width:72px;height:72px}}
+
+/* Homepage category directory: keep the shared range system scoped to #products. */
+.home-page #products .home-pul-feature{grid-template-columns:1.05fr .8fr;gap:32px;padding:24px;margin-bottom:34px}
+.home-page #products .home-pul-feature h3{font-size:clamp(28px,2.5vw,36px);margin-bottom:12px}
+.home-page #products .home-pul-feature p{font-size:14px;line-height:1.65;margin-block:8px}
+.home-page #products .home-pul-feature .range-facts{margin:14px 0;padding:14px 0;gap:12px}
+.home-page #products .home-pul-feature .range-facts dd{font-size:18px}
+.home-page #products .home-pul-feature img{max-height:230px}
+.home-page #products .home-pul-feature figcaption{margin-top:6px}
+.home-page #products .home-range-family{margin-top:34px}
+.home-page #products .home-range-family .range-family-heading{margin-bottom:16px}
+.home-page #products .home-range-family .range-family-heading h3{font-size:27px}
+.home-page #products .home-range-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px}
+.home-page #products .home-range-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.home-page #products .home-range-grid.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.home-page #products .home-range-grid .range-family-card{min-width:0}
+.home-page #products .home-range-grid .range-family-card>img,.home-page #products .home-range-grid .range-family-card> a{display:block;width:100%;aspect-ratio:1;background:#f4f6ef;border-radius:12px;overflow:hidden}
+.home-page #products .home-range-grid .range-family-card>img,.home-page #products .home-range-grid .range-family-card> a img{display:block;width:100%;height:100%;object-fit:contain;padding:12px}
+.home-page #products .home-range-grid .range-family-card h4{font-size:22px;margin:14px 0 10px}
+.home-page #products .home-range-grid .range-family-card h4 a{color:inherit;text-decoration:none}
+.home-page #products .home-range-grid .range-family-card h4 a:hover{text-decoration:underline;text-underline-offset:4px}
+.home-page #products .home-range-links{display:grid;gap:5px}
+.home-page #products .home-range-links .range-text-link{font-size:13px;padding:4px 0}
+.home-page #products .home-range-links .range-text-link:first-child{font-weight:750}
+.home-page #products .home-range-grid a:focus-visible{outline:3px solid #b5663f;outline-offset:4px}
+@media(max-width:900px){.home-page #products .home-range-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){.home-page #products .home-pul-feature{grid-template-columns:1fr;gap:18px;padding:22px}.home-page #products .home-pul-feature img{max-height:220px}.home-page #products .home-range-family{margin-top:28px}.home-page #products .home-range-grid,.home-page #products .home-range-grid.two,.home-page #products .home-range-grid.four{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px}.home-page #products .home-range-grid .range-family-card h4{font-size:20px}}
+@media(max-width:390px){.home-page #products .home-range-grid,.home-page #products .home-range-grid.two,.home-page #products .home-range-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.home-page #products .home-range-grid .range-family-card h4{font-size:22px}}
+
+/* Homepage product cards: compact images and keyboard-friendly browse links. */
+.home-page #products .home-range-grid .home-range-image-link{display:block;width:100%;height:260px;aspect-ratio:auto;background:#f4f6ef;border-radius:12px;overflow:hidden;min-height:44px}
+.home-page #products .home-range-grid .home-range-image-link img{display:block;width:100%;height:100%;object-fit:contain;padding:12px}
+.home-page #products .home-range-grid .range-family-card h4 a{color:inherit;text-decoration:none}
+.home-page #products .home-range-grid .range-family-card h4 a:hover{text-decoration:underline;text-underline-offset:4px}
+.home-page #products .home-range-links{gap:4px}
+.home-page #products .home-range-links .range-text-link{display:flex;align-items:center;min-height:44px;padding:8px 0;font-size:13px}
+.home-page #products .home-range-links .range-text-link:first-child{font-weight:750}
+@media(max-width:740px){.home-page #products .home-range-grid .home-range-image-link{height:auto;aspect-ratio:1}.home-page #products .home-range-grid .range-family-card h4{margin:12px 0 6px;font-size:20px}}
+@media(max-width:359px){.home-page #products .home-range-grid,.home-page #products .home-range-grid.two,.home-page #products .home-range-grid.four{grid-template-columns:1fr}}
