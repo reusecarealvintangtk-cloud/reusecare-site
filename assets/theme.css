@@ -35,5 +35,5 @@ body.has-contact-dock .footer{padding-bottom:calc(90px + env(safe-area-inset-bot
 .contact-dock-quote span:last-child{font-size:24px;line-height:1}
 .contact-dock-quote:hover{background:#0e5140;transform:translateY(-2px)}
 .contact-dock a:focus-visible{outline:3px solid #b5663f;outline-offset:4px}
-@media(max-width:640px){.contact-dock{inset-block-end:calc(12px + env(safe-area-inset-bottom,0px));min-height:48px;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}.contact-dock-whatsapp{width:48px;height:48px}.contact-dock-quote{min-height:48px;padding:0 17px;gap:8px;font-size:12px}}
+@media(max-width:640px){body.has-contact-dock .footer{padding-bottom:22px}.contact-dock{position:static;min-height:72px;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:#173a33}.contact-dock-whatsapp{width:48px;height:48px}.contact-dock-quote{min-height:48px;padding:0 17px;gap:8px;font-size:12px}}
 @media(max-width:350px){.contact-dock-quote svg{display:none}.contact-dock-quote{padding:0 13px}}
