@@ -109,7 +109,7 @@ document.querySelectorAll('a[href^="/request-a-quote/?style="]').forEach((link) 
   const style = url.searchParams.get('style');
   const card = link.closest('.catalog-card');
   const model = url.searchParams.get('model') || (card?.querySelector('h3') || document.querySelector('main h1'))?.textContent.trim();
-  let image = card?.querySelector('img')?.getAttribute('src') || '';
+  let image = url.searchParams.get('image') || card?.querySelector('img')?.getAttribute('src') || '';
   if (!image) {
     const socialImage = document.querySelector('meta[property="og:image"]')?.content || '';
     try { image = socialImage ? new URL(socialImage, location.origin).pathname : ''; } catch { image = ''; }
@@ -117,7 +117,7 @@ document.querySelectorAll('a[href^="/request-a-quote/?style="]').forEach((link) 
   const requestedUnit = url.searchParams.get('unit');
   const unit = ['pieces','pairs','sets','metres'].includes(requestedUnit) ? requestedUnit : unitByCategory[card?.dataset.category] || quoteUnitByStyle[style] || 'pieces';
   if (model) url.searchParams.set('model', model.slice(0, 180));
-  if (/^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/products\/[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(image)) url.searchParams.set('image', image);
+  if (/^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/(?:products\/[a-z0-9][a-z0-9-]*|factory\/packaging)\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(image)) url.searchParams.set('image', image);
   url.searchParams.set('unit', unit);
   url.searchParams.set('source', location.pathname);
   link.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
@@ -210,7 +210,7 @@ if (quoteForm) {
   const unitParam = quoteParams.get('unit') || '';
   const sourceParam = quoteParams.get('source') || '';
   const safeModel = modelParam.length <= 180 && !/[<>\r\n]/.test(modelParam) ? modelParam.trim() : '';
-  const safeImage = /^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/products\/[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(imageParam) ? imageParam : '';
+  const safeImage = /^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/(?:products\/[a-z0-9][a-z0-9-]*|factory\/packaging)\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(imageParam) ? imageParam : '';
   const safeUnit = ['pieces','pairs','sets','metres'].includes(unitParam) ? unitParam : '';
   const safeSource = /^\/[a-z0-9/_-]*\/?$/i.test(sourceParam) ? sourceParam : '';
   const modelField = quoteForm.querySelector('[name="product_model"]');
