@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Name, valid email and product are required' });
   }
   if (data.product_model && /[<>\r\n]/.test(data.product_model)) return res.status(400).json({ error: 'Invalid product reference' });
-  if (data.product_image && !/^\/assets\/products\/[a-z0-9][a-z0-9-]*\.(?:webp|png|jpe?g)$/i.test(data.product_image)) return res.status(400).json({ error: 'Invalid product image' });
+  if (data.product_image && !/^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/(?:products\/[a-z0-9][a-z0-9-]*|factory\/packaging)\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(data.product_image)) return res.status(400).json({ error: 'Invalid product image' });
   if (data.source_url && !/^\/[a-z0-9/_-]*\/?$/i.test(data.source_url)) return res.status(400).json({ error: 'Invalid source page' });
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.QUOTE_TO_EMAIL;

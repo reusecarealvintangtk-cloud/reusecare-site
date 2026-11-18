@@ -93,6 +93,7 @@ if (productPagePattern.test(location.pathname)) {
 
 // Carry the exact catalogue reference into the RFQ instead of losing it at category level.
 const quoteUnitByStyle = {
+  'disposable-nappy-liners': 'rolls',
   'pul-fabric': 'metres', 'inner-fabric': 'metres',
   'reusable-nursing-pads': 'pairs',
   'reusable-swim-diapers': 'pieces', 'baby-bibs': 'pieces',
@@ -115,7 +116,7 @@ document.querySelectorAll('a[href^="/request-a-quote/?style="]').forEach((link) 
     try { image = socialImage ? new URL(socialImage, location.origin).pathname : ''; } catch { image = ''; }
   }
   const requestedUnit = url.searchParams.get('unit');
-  const unit = ['pieces','pairs','sets','metres'].includes(requestedUnit) ? requestedUnit : unitByCategory[card?.dataset.category] || quoteUnitByStyle[style] || 'pieces';
+  const unit = ['pieces','pairs','sets','metres','rolls'].includes(requestedUnit) ? requestedUnit : unitByCategory[card?.dataset.category] || quoteUnitByStyle[style] || 'pieces';
   if (model) url.searchParams.set('model', model.slice(0, 180));
   if (/^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/(?:products\/[a-z0-9][a-z0-9-]*|factory\/packaging)\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(image)) url.searchParams.set('image', image);
   url.searchParams.set('unit', unit);
@@ -155,6 +156,7 @@ if (quoteForm) {
   const styles = {
     "inner-fabric": ["Inner Fabrics","Inner Fabrics"],
     "diaper-inserts": ["Diaper Inserts","Diaper Inserts"],
+    'disposable-nappy-liners': ['Disposable Nappy Liners', 'Disposable Nappy Liners'],
     "inner-fabric-blue": ["Blue Polar Fleece Inner Fabric","Inner Fabrics"],
     "inner-fabric-pink": ["Pink Polar Fleece Inner Fabric","Inner Fabrics"],
     "inner-fabric-red": ["Red Polar Fleece Inner Fabric","Inner Fabrics"],
@@ -211,7 +213,7 @@ if (quoteForm) {
   const sourceParam = quoteParams.get('source') || '';
   const safeModel = modelParam.length <= 180 && !/[<>\r\n]/.test(modelParam) ? modelParam.trim() : '';
   const safeImage = /^\/(?:assets\/products\/[a-z0-9][a-z0-9-]*|media\/(?:products\/[a-z0-9][a-z0-9-]*|factory\/packaging)\/[a-z0-9][a-z0-9-]*)\.(?:webp|png|jpe?g)$/i.test(imageParam) ? imageParam : '';
-  const safeUnit = ['pieces','pairs','sets','metres'].includes(unitParam) ? unitParam : '';
+  const safeUnit = ['pieces','pairs','sets','metres','rolls'].includes(unitParam) ? unitParam : '';
   const safeSource = /^\/[a-z0-9/_-]*\/?$/i.test(sourceParam) ? sourceParam : '';
   const modelField = quoteForm.querySelector('[name="product_model"]');
   const imageField = quoteForm.querySelector('[name="product_image"]');
@@ -233,6 +235,11 @@ if (quoteForm) {
       preview.alt = '';
       preview.width = 96;
       preview.height = 96;
+      if (styleKey === 'disposable-nappy-liners') {
+        const packagingNote = document.createElement('span');
+        packagingNote.textContent = 'Packaging reference only. The pictured flush wording is pending technical documentation and target-market review. Bin used liners. Do not flush.';
+        copy.append(packagingNote);
+      }
       context.replaceChildren(preview, copy);
     } else context.replaceChildren(copy);
     context.hidden = false;
@@ -258,16 +265,18 @@ if (quoteForm) {
     const inner = productSelect?.value === 'Inner Fabrics';
     const fabric = pul || inner;
     const nursing = productSelect?.value === 'Reusable Nursing Pads';
+    const liners = productSelect?.value === 'Disposable Nappy Liners';
     if (fabricFields) { fabricFields.hidden = !pul; fabricFields.disabled = !pul; }
     if (quantityUnit) {
       const previous = quantityUnit.value;
       const units = fabric ? [['metres','Metres']] : nursing ? [['pieces','Pieces'],['pairs','Pairs'],['sets','Sets']] : [['pieces','Pieces'],['sets','Sets']];
+      if (liners) units.splice(0, units.length, ['rolls', 'Rolls']);
       if (productSelect?.value === 'Multiple Categories') units.push(['mixed','Mixed units — specify in details']);
       quantityUnit.replaceChildren(...units.map(([value,label]) => new Option(label,value)));
       if (units.some(([value]) => value === previous)) quantityUnit.value = previous;
     }
-    if (quantityInput) quantityInput.placeholder = fabric ? (inner ? 'e.g. 50 metres' : 'e.g. 5 or 50 metres') : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
-    if (quantityHelp) quantityHelp.textContent = inner ? 'Inner-fabric width, weight and minimum order are confirmed with your quote. Specify metres.' : pul ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
+    if (quantityInput) quantityInput.placeholder = liners ? 'e.g. 300 rolls' : fabric ? (inner ? 'e.g. 50 metres' : 'e.g. 5 or 50 metres') : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
+    if (quantityHelp) quantityHelp.textContent = liners ? 'Enter the number of rolls. Include your target sheets per roll in Project Details.' : inner ? 'Inner-fabric width, weight and minimum order are confirmed with your quote. Specify metres.' : pul ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
     if (event?.type === 'change') {
       const context = document.querySelector('#selected-product-context');
       if (selection && productSelect.value !== selection[1]) {
