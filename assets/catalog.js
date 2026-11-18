@@ -20,8 +20,7 @@
     diapers: { label: 'Cloth Diapers', route: '/cloth-diapers/', noun: 'cloth diaper' },
     swim: { label: 'Swim Diapers', route: '/reusable-swim-diapers/', noun: 'swim diaper' },
     bibs: { label: 'Baby Bibs', route: '/baby-bibs/', noun: 'baby bib' },
-    'diaper-inserts': { label: 'Diaper Inserts', route: '/cloth-diapers/inserts/', noun: 'diaper insert' },
-    'nappy-liners': { label: 'Nappy Liners', route: '/disposable-nappy-liners/', noun: 'disposable nappy liner' },
+    'diaper-inserts': { label: 'Diaper Inserts', route: '/cloth-diapers/inserts/', noun: 'reusable diaper insert and disposable nappy liner' },
     'makeup-remover-pads': { label: 'Makeup Remover Pads', route: '/makeup-remover-pads/', noun: 'makeup remover pad' },
     accessories: { label: 'Wet Bags & Accessories', route: '/accessories/wet-bags/', noun: 'wet bag or accessory' }
   };
@@ -35,9 +34,10 @@
     'cloth-diapers': 'diapers',
     'inserts': 'diaper-inserts',
     'diaper-inserts': 'diaper-inserts',
-    'disposable-nappy-liners': 'nappy-liners',
-    'diaper-liners': 'nappy-liners',
-    'disposable-diaper-liners': 'nappy-liners',
+    'nappy-liners': 'diaper-inserts',
+    'disposable-nappy-liners': 'diaper-inserts',
+    'diaper-liners': 'diaper-inserts',
+    'disposable-diaper-liners': 'diaper-inserts',
     'makeup-remover': 'makeup-remover-pads',
     'wet-bags': 'accessories'
   };
