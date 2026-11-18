@@ -45,6 +45,7 @@ document.querySelectorAll('.range-nav a').forEach((link) => { if (link.pathname 
 if (location.pathname === '/') {
   const catalogCategoryByPath = {
     '/reusable-menstrual-pads/': 'pads',
+    '/period-underwear/': 'period-underwear',
     '/reusable-nursing-pads/': 'nursing',
     '/cloth-diapers/': 'diapers',
     '/reusable-swim-diapers/': 'swim',
@@ -82,7 +83,7 @@ document.addEventListener('click', (event) => {
   }
 });
 
-const productPagePattern = /^\/(?:products|pul-fabric|reusable-menstrual-pads|reusable-nursing-pads|reusable-swim-diapers|cloth-diapers|baby-bibs|accessories\/wet-bags|inner-fabric)(?:\/|$)/i;
+const productPagePattern = /^\/(?:products|pul-fabric|reusable-menstrual-pads|period-underwear|reusable-nursing-pads|reusable-swim-diapers|cloth-diapers|baby-bibs|accessories\/wet-bags|inner-fabric)(?:\/|$)/i;
 if (productPagePattern.test(location.pathname)) {
   const productName = document.querySelector('main h1')?.textContent.trim().slice(0, 160) || location.pathname;
   trackEvent('view_item', {
@@ -97,6 +98,7 @@ const quoteUnitByStyle = {
   'pul-fabric': 'metres', 'inner-fabric': 'metres',
   'reusable-nursing-pads': 'pairs',
   'reusable-swim-diapers': 'pieces', 'baby-bibs': 'pieces',
+  'period-underwear': 'pairs',
   'reusable-menstrual-pads': 'pieces', 'reusable-hygiene-product-collection': 'sets',
   'reusable-cloth-diapers': 'pieces', 'cloth-diaper-inserts': 'pieces',
   'diaper-inserts': 'pieces', 'reusable-care-accessories': 'pieces',
@@ -177,6 +179,7 @@ if (quoteForm) {
     'baby-bibs': ['Baby Bibs — PUL or cotton, one size', 'Baby Bibs'],
     'reusable-hygiene-product-collection': ['Reusable Hygiene Product Collection', 'Reusable Menstrual Pads'],
     'cloth-diaper-inserts': ['Diaper Inserts', 'Diaper Inserts'],
+    'period-underwear': ['Period Underwear', 'Period Underwear'],
     'reusable-menstrual-pads': ['Reusable Menstrual Pads', 'Reusable Menstrual Pads'],
     'reusable-cloth-diapers': ['Reusable Cloth Diapers', 'Cloth Diapers'],
     'reusable-care-accessories': ['Reusable Care Accessories', 'Wet Bags / Accessories'],
@@ -265,17 +268,19 @@ if (quoteForm) {
     const inner = productSelect?.value === 'Inner Fabrics';
     const fabric = pul || inner;
     const nursing = productSelect?.value === 'Reusable Nursing Pads';
+    const underwear = productSelect?.value === 'Period Underwear';
     const liners = productSelect?.value === 'Disposable Nappy Liners';
     if (fabricFields) { fabricFields.hidden = !pul; fabricFields.disabled = !pul; }
     if (quantityUnit) {
       const previous = quantityUnit.value;
       const units = fabric ? [['metres','Metres']] : nursing ? [['pieces','Pieces'],['pairs','Pairs'],['sets','Sets']] : [['pieces','Pieces'],['sets','Sets']];
+      if (underwear) units.splice(0, units.length, ['pairs', 'Pairs'], ['sets', 'Sets']);
       if (liners) units.splice(0, units.length, ['rolls', 'Rolls']);
       if (productSelect?.value === 'Multiple Categories') units.push(['mixed','Mixed units — specify in details']);
       quantityUnit.replaceChildren(...units.map(([value,label]) => new Option(label,value)));
       if (units.some(([value]) => value === previous)) quantityUnit.value = previous;
     }
-    if (quantityInput) quantityInput.placeholder = liners ? 'e.g. 300 rolls' : fabric ? (inner ? 'e.g. 50 metres' : 'e.g. 5 or 50 metres') : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
+    if (quantityInput) quantityInput.placeholder = liners ? 'e.g. 300 rolls' : fabric ? (inner ? 'e.g. 50 metres' : 'e.g. 5 or 50 metres') : underwear ? 'e.g. 300; choose pairs or sets' : nursing ? 'e.g. 300; choose pieces, pairs or sets' : 'e.g. 300; specify any split between styles';
     if (quantityHelp) quantityHelp.textContent = liners ? 'Enter the number of rolls. Include your target sheets per roll in Project Details.' : inner ? 'Inner-fabric width, weight and minimum order are confirmed with your quote. Specify metres.' : pul ? 'PUL minimum: 5 metres. Custom-print quantities are confirmed separately.' : 'Pack quantities vary by product. For sets, include the pieces per set in Project Details.';
     if (event?.type === 'change') {
       const context = document.querySelector('#selected-product-context');

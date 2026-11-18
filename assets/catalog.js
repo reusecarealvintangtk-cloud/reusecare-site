@@ -16,6 +16,7 @@
     fabrics: { label: 'PUL Fabric', route: '/pul-fabric/', noun: 'PUL fabric', note: true },
     'inner-fabric': { label: 'Inner Fabrics', route: '/inner-fabric/', noun: 'inner fabric' },
     pads: { label: 'Menstrual Pads', route: '/reusable-menstrual-pads/', noun: 'menstrual pad' },
+    'period-underwear': { label: 'Period Underwear', route: '/period-underwear/', noun: 'period underwear' },
     nursing: { label: 'Nursing Pads', route: '/reusable-nursing-pads/', noun: 'nursing pad' },
     diapers: { label: 'Cloth Diapers', route: '/cloth-diapers/', noun: 'cloth diaper' },
     swim: { label: 'Swim Diapers', route: '/reusable-swim-diapers/', noun: 'swim diaper' },
